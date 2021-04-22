@@ -8,9 +8,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.pokemon.model.Specie;
+import com.pokemon.model.SpecieDetail;
 import com.pokemon.model.Species;
 import com.pokemon.service.CarouselService;
 
@@ -21,7 +23,7 @@ public class CarouselController {
 	public CarouselService carouselService;
 
 	@RequestMapping(value = "/pokemon-species", method = RequestMethod.GET)
-	public ModelAndView showRegister(
+	public ModelAndView lstPokemonSpecies(
 		HttpServletRequest request, 
 		HttpServletResponse response) {
 		
@@ -29,12 +31,28 @@ public class CarouselController {
 		
 		ModelAndView mav = new ModelAndView("pokemon-species");
 		mav.addObject("species", species);
+		mav.addObject("baseUrl", request.getContextPath());
+
+		return mav;
+	}
+	
+	@RequestMapping(value = "/pokemon-species-detail", method = RequestMethod.GET)
+	public ModelAndView pokemonSpeciesDetail(
+		HttpServletRequest request, 
+		HttpServletResponse response,
+		@RequestParam String url) {
+		
+		SpecieDetail specieDetail = carouselService.fetchDetail(url);
+		
+		ModelAndView mav = new ModelAndView("pokemon-species-detail");
+		mav.addObject("specieDetail", specieDetail);
+		mav.addObject("baseUrl", request.getContextPath());
 
 		return mav;
 	}
 
 	@RequestMapping(value = "/register-specie", method = RequestMethod.POST)
-	public ModelAndView addUser(
+	public ModelAndView addPokemon(
 		HttpServletRequest request, 
 		HttpServletResponse response,
 		@ModelAttribute("specie") Specie specie) {
